@@ -20,6 +20,12 @@ An interactive web application that lets users explore planets, stars, and other
 - **APIs:** NASA Open APIs, custom astronomy datasets
 - **Deployment:** Netlify
 
+  ## 🤝 Teamates
+
+- Charvee Masand
+- Srijit Kumar Dey
+- Anoushka Mandal
+
 ## 🚀 Getting Started
 
 ### 1. Clone the Repo
