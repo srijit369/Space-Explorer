@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Space Explorer</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  
+  <!--EARTH Rotation-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!--API 3D GLobe-->
+  <link href="https://cesium.com/downloads/cesiumjs/releases/latest/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/latest/Build/Cesium/Cesium.js"></script>
+
+  <!--Logo Of site-->
+  <link rel="shortcut icon" href="logo.png">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.pnh" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+  <!--Icon on URL-->
+  <link rel="shortcut icon" href="logo.png">
+
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <h1 class="sitename"><img src="logo.png" alt="">  Space Explorer</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#explore">Explorer</a></li>
+          <li><a href="#services">Discover Space</a></li>
+          <li><a href="#3d-globe">3D Globe</a></li>
+          <li><a href="#portfolio">Gallery</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section accent-background">
+
+      <img src="assets/img/hero-bg.jpg" alt="" data-aos="fade-in">
+
+      <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+        <h2>Welcome to Space</h2>
+        <p>We are team of talented designers to give the best experience of Space</p>
+        <a href="#explore" class="btn-scroll" title="Scroll Down"><i class="bi bi-chevron-down"></i></a>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="explore" >
+        <h2>Explore NASA Data</h2>
+        <div class="data-selector">
+            <button onclick="loadEarthImagery()">
+              <i class="bi bi-globe"></i> Earth Imagery
+            </button>
+            <button onclick="loadNaturalEvents()">
+              <i class="bi bi-fire"></i> Natural Events
+            </button>
+        </div>
+        <div id="globeViz"></div>
+        <div class="legend">
+          <span class="legend-item" style="background:#ca0d0a; color:white;">Wildfires</span>
+          <span class="legend-item" style="background:#5e9cff; color:white;">Severe Storms</span>
+          <span class="legend-item" style="background:#ffb347; color:white;">Volcanoes</span>
+          <span class="legend-item" style="background:#76d672; color:white;">Other</span>
+        </div>
+    </section>
+
+    <script src="assets/js/main.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+    // Replace 'YOUR_API_KEY' with your actual NASA API key
+    const API_KEY = 'j8BcQx4aqA0fSnJ9X7OT4HCLyRbvW1LmzHIo2712';
+
+    function loadEarthImagery() {
+      const lat = 1.5, lon = 100.75, date = '2014-02-01';
+      fetch(`https://api.nasa.gov/planetary/earth/imagery?lon=${lon}&lat=${lat}&date=${date}&api_key=${API_KEY}`)
+        .then(response => {
+          if (response.ok) return response.url;
+          throw new Error('Failed to fetch Earth imagery');
+        })
+        .then(imgUrl => {
+          document.getElementById('infoPanel').innerHTML = `
+            <h3>Earth Satellite Imagery</h3>
+            <img src="${imgUrl}" style="max-width: 100%;">
+          `;
+        })
+        .catch(error => {
+          document.getElementById('infoPanel').innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+    }
+
+    function loadNaturalEvents() {
+      fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
+        .then(response => response.json())
+        .then(data => {
+          const points = data.events.map(event => ({
+            lat: event.geometry[0].coordinates[1],
+            lng: event.geometry[0].coordinates[0],
+            color: getColorByEventType(event.categories[0].title),
+            size: 0.2
+          }));
+          if (typeof world !== 'undefined') {
+            world.pointsData(points);
+          }
+          document.getElementById('infoPanel').innerHTML = `
+            <h3>Natural Events (EONET)</h3>
+            <p>${data.events.length} active natural events displayed.</p>
+          `;
+        })
+        .catch(error => {
+          document.getElementById('infoPanel').innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+    }
+
+    function getColorByEventType(type) {
+      switch (type.toLowerCase()) {
+        case 'wildfires': return 'red';
+        case 'severe storms': return 'blue';
+        case 'volcanoes': return 'orange';
+        default: return 'green';
+      }
+    }
+
+    function loadDailyImage() {
+      fetch(`https://api.nasa.gov/planetary/apod?api_key=${j8BcQx4aqA0fSnJ9X7OT4HCLyRbvW1LmzHIo2712}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.media_type === 'image') {
+            document.getElementById('infoPanel').innerHTML = `
+              <h3>Astronomy Picture of the Day</h3>
+              <img src="${data.url}" style="max-width: 100%;">
+              <p><strong>${data.title}</strong><br>${data.explanation}</p>
+            `;
+          } else {
+            document.getElementById('infoPanel').innerHTML = `<p>Today's APOD is a video: ${data.url}</p>`;
+          }
+        })
+        .catch(error => {
+          document.getElementById('infoPanel').innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+    }
+
+    // Initialize the globe (if not already done)
+    if (typeof world === 'undefined') {
+      const world = Globe()
+        (document.getElementById('globeViz'))
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png');
+      world.controls().autoRotate = true;
+      world.controls().autoRotateSpeed = 0.3;
+    }
+    </script>
+
+    <!-- /About Section -->
+
+    <!-- Services Section -->
+  <div class="row gy-4 justify-content-center">
+ 
+    <section id="services" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Discover Space</h2>
+        <p>Where scattered stars become stories—constellations lighting up the night.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-rocket icon"></i></div>
+              <h4><a href="service-details.html" class="stretched-link">Astronomy Data</a></h4>
+              <p>Astronomy data unlocks the secrets of the universe, revealing the composition, distance, and dazzling variety of stars and celestial objects beyond our sky</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
+              <h4><a href="calendeer.html" class="stretched-link">Astronomy Calendar</a></h4>
+              <p>Stars appear beautiful in the night sky because their shimmering light and unique colors create a sense of wonder and timeless connection.</p>
+            </div>
+          </div><!-- End Service Item -->
+
+        </div>
+
+      </div>
+
+    </section>
+  </div>
+<!-- /Services Section -->
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats section light-background">
+      
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+            <i class="bi bi-globe"></i>
+              <span data-purecounter-start="0" data-purecounter-end="250" data-purecounter-duration="1" class="purecounter"></span>
+              <p><span>Billions stars in</span><strong> Milky Way</strong></p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-rocket"></i>
+              <span data-purecounter-start="0" data-purecounter-end="900" data-purecounter-duration="1" class="purecounter"></span>
+              <p><span>light-years away</span><strong> Andromeda Galaxy</strong> </p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-cloud"></i>
+              <span data-purecounter-start="0" data-purecounter-end="60000" data-purecounter-duration="1" class="purecounter"></span>
+              <p><span>Diameter Big</span><strong> Whirlpool</strong> </p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-moon"></i>
+              <span data-purecounter-start="0" data-purecounter-end="97" data-purecounter-duration="1" class="purecounter"></span>
+              <p><span>moons in </span><strong>Jupiter</strong> </p>
+            </div>
+          </div><!-- End Stats Item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Stats Section -->
+
+      <!--3D Globe-->
+      <section id="3d-globe" class="section">
+          <div class="text-center">
+            <h3>3D Realistic Globe</h3>
+            <p>Explore 3D maps and models of Globe.</p>
+          <canvas id="c"></canvas>
+
+          <script src="app.js"></script>
+          <script src="three.js"></script>
+      </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Space Gallery</h2>
+        <p>The universe is a pretty big place. If it’s just us, seems like an awful waste of space.”</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+
+          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-books">ISRO</li>
+            <li data-filter=".filter-app">NASA</li>
+            <li data-filter=".filter-product">ESA</li>
+            <li data-filter=".filter-branding">Roscosmos</li>
+          </ul><!-- End Portfolio Filters -->
+
+          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <img src="assets/img/portfolio/app-1.webp" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Project Mercury(1961–1963)</h4>
+                <p>Project Mercury was a groundbreaking endeavor in the history of space exploration, serving as the United States' initial human spaceflight program.</p>
+                <a href="assets/img/portfolio/app-1.webp" title="Project Mercury" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <img src="assets/img/portfolio/product-1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Giotto mission(1985)</h4>
+                <p>The Giotto mission was a landmark achievement in cometary exploration, launched by the European Space Agency (ESA) in 1985. </p>
+                <a href="assets/img/portfolio/product-1.jpg" title="Giotto mission(1985)" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <img src="assets/img/portfolio/branding-1.webp" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Mir Space Station (1986–2001)</h4>
+                <p>The Mir space station, operating from 1986 to 2001, was a significant achievement in space exploration, initially for the Soviet Union and later for the Russian Federation. Its name, "Mir," meaning "peace" or "world" in Russian, reflected its purpose as a research outpost and later as a platform for international cooperation.  </p>
+                <a href="assets/img/portfolio/branding-1.webp" title="Mir Space Station (1986–2001)" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <img src="assets/img/portfolio/books-1.webp" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Chandrayaan-1 (2008–2009)</h4>
+                <p>Lorem ipsum, dolor sit amet consectetur</p>
+                <a href="assets/img/portfolio/books-1.webp" title="Chandrayaan-1 (2008–2009)" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <img src="assets/img/portfolio/app-2.webp" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Apollo 11 (1969)</h4>
+                <p>Apollo 11 was a pivotal mission in the history of space exploration, marking the first time humans set foot on the surface of another celestial body. It was launched by NASA as part of the Apollo program, a national effort to fulfill President John F. Kennedy's goal of landing a man on the Moon and returning him safely to Earth before the end of the 1960s.</p>
+                <a href="assets/img/portfolio/app-2.webp" title="Apollo 11 (1969)" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <img src="assets/img/portfolio/product-2.webp" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Mars Express (2003–present)</h4>
+                <p>The Mars Express mission, launched by the European Space Agency (ESA) in 2003, is a long-lived and highly successful planetary exploration effort aimed at studying Mars. The mission is comprised of an orbiter and a lander, Beagle 2, although Beagle 2 experienced operational failure after landing on the Martian surface. </p>
+                <a href="assets/img/portfolio/product-2.webp" title="Mars Express (2003–present)" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <img src="assets/img/portfolio/branding-2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Sputnik 1 (1957)</h4>
+                <p>Sputnik 1, launched by the Soviet Union on October 4, 1957, was the world's first artificial satellite. </p>
+                <a href="assets/img/portfolio/branding-2.jpg" title="Sputnik 1 (1957)" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <img src="assets/img/portfolio/books-2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Aditya-L1 (2023–present)</h4>
+                <p>The Aditya-L1 mission is India's first space-based solar mission and an observatory-class effort to study the Sun. </p>
+                <a href="assets/img/portfolio/books-2.jpg" title="Aditya-L1 (2023–present)" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <img src="assets/img/portfolio/product-3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Rosetta (2004–2016)</h4>
+                <p>The Rosetta mission was a remarkable endeavor by the European Space Agency (ESA), lasting from 2004 to 2016, with the primary objective of studying a comet: 67P/Churyumov–Gerasimenko. The mission involved both an orbiter and a lander, named Philae. </p>
+                <a href="assets/img/portfolio/product-3.jpg" title="Rosetta (2004–2016)" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <img src="assets/img/portfolio/branding-3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vostok 1 (1961)</h4>
+                <p>Vostok 1, launched by the Soviet Union on April 12, 1961, was a monumental achievement in human spaceflight, marking the first time a human being journeyed into outer space and achieved Earth orbit.</p>
+                <a href="assets/img/portfolio/branding-3.jpg" title="Vostok 1 (1961)" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <img src="assets/img/portfolio/app-3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Space Shuttle Program (1981–2011)</h4>
+                <p>The Space Shuttle program, officially known as the Space Transportation System (STS), was NASA's fourth human spaceflight program, operating from 1981 to 2011. Its primary goal was to provide routine transportation of crew and cargo to low Earth orbit (LEO), which it achieved through its fleet of reusable spacecraft. </p>
+                <a href="assets/img/portfolio/app-3.jpg" title="Space Shuttle Program (1981–2011)" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <img src="assets/img/portfolio/books-3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>ASTROSAT (2015–2022):</h4>
+                <p>ASTROSAT is India's first dedicated multi-wavelength space observatory, launched by the Indian Space Research Organisation (ISRO). It was operational from 2015 to 2022, significantly contributing to various areas of astronomical research. </p>
+                <a href="assets/img/portfolio/books-3.jpg" title="ASTROSAT (2015–2022)" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+          </div><!-- End Portfolio Container -->
+        </div>
+      </div>
+
+    </section><!-- /Portfolio Section -->
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Space Agencies</h2>
+        <p>“Space agencies turn humanity’s dreams into reality, reaching beyond our world to expand the boundaries of knowledge.”</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="swiper init-swiper">
+          <script type="application/json" class="swiper-config">
+            {
+              "loop": true,
+              "speed": 600,
+              "autoplay": {
+                "delay": 5000
+              },
+              "slidesPerView": "auto",
+              "pagination": {
+                "el": ".swiper-pagination",
+                "type": "bullets",
+                "clickable": true
+              },
+              "breakpoints": {
+                "320": {
+                  "slidesPerView": 1,
+                  "spaceBetween": 40
+                },
+                "1200": {
+                  "slidesPerView": 3,
+                  "spaceBetween": 1
+                }
+              }
+            }
+          </script>
+          <div class="swiper-wrapper">
+
+            <div class="swiper-slide">
+              <div class="testimonial-item">
+                <p>
+                  <i class="bi bi-quote quote-icon-left"></i>
+                  <span>he United States’ civil space agency, leads landmark missions such as Apollo, the Space Shuttle, and the Artemis lunar program.It pioneers research in Earth science, planetary exploration, and astrophysics, including the James Webb Space Telescope and Mars rovers.</span>
+                  <i class="bi bi-quote quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+                <h3>NASA</h3>
+                <h4>United State</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item">
+                <p>
+                  <i class="bi bi-quote quote-icon-left"></i>
+                  <span>The Indian Space Research Organisation is India’s national space agency, known for cost-effective missions like Chandrayaan and Mangalyaan, and is advancing toward human spaceflight with Gaganyaan.ISRO is also recognized for its commercial satellite launches and international collaborations, such as the NISAR mission with NASA</span>
+                  <i class="bi bi-quote quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-2.png" class="testimonial-img" alt="">
+                <h3>ISRO</h3>
+                <h4>India</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item">
+                <p>
+                  <i class="bi bi-quote quote-icon-left"></i>
+                  <span>JAXA, Japan’s national space agency, is responsible for satellite launches, asteroid sample-return missions like Hayabusa, and participation in the International Space Station.It develops advanced space technologies and collaborates on international missions, including lunar exploration with ISRO.</span>
+                  <i class="bi bi-quote quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+                <h3>JAXA</h3>
+                <h4>Japan</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item">
+                <p>
+                  <i class="bi bi-quote quote-icon-left"></i>
+                  <span>ESA is a multinational agency headquartered in France, representing 23 European countries in human and robotic exploration, Earth observation, and missions like Rosetta and Gaia.It operates Europe’s spaceport, develops the Ariane launch vehicles, and partners globally, including with NASA on the ISS.</span>
+                  <i class="bi bi-quote quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-4.png" class="testimonial-img" alt="">
+                <h3>ESA</h3>
+                <h4>Europe</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item">
+                <p>
+                  <i class="bi bi-quote quote-icon-left"></i>
+                  <span>Roscosmos is Russia’s state space corporation, inheriting the Soviet legacy with achievements like the first satellite (Sputnik) and first human in space (Yuri Gagarin).It remains a major partner on the International Space Station and leads both crewed and robotic missions from Russian launch sites.</span>
+                  <i class="bi bi-quote quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-5.png" class="testimonial-img" alt="">
+                <h3>Roscosmos</h3>
+                <h4>Russia</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+
+      </div>
+
+    </section><!-- /Testimonials Section -->
+
+    <!-- Team Section -->
+    <section id="team" class="team section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Team</h2>
+        <p>Together, we build ideas into reality</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-5">
+
+          <div class="col-xl-4 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
+              </div>
+              <div class="member-info">
+                <div class="social">
+                  <a target="_blank" href="https://github.com/charveemasand108"><i class="bi bi-github"></i></a>
+                  <a target="_blank" href="mailto:charvee.masand@gmail.com"><i class="bi bi-google"></i></a>
+                  <a target="_blank" href="https://www.linkedin.com/in/charvee108/"><i class="bi bi-linkedin"></i></a>
+                </div>
+                <h4>Charvee Masand</h4>
+                <span>CSE-AI&ML,SRMIST</span>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-xl-4 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="400">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+              </div>
+              <div class="member-info">
+                <div class="social">
+                  <a target="_blank" href="https://github.com/mandalanoushka"><i class="bi bi-github"></i></a>
+                  <a target="_blank" href="mailto:anoushkamandal0@gmail.com"><i class="bi bi-google"></i></a>
+                  <a target="_blank" href="https://www.linkedin.com/in/anoushka-mandal-446b512b7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="bi bi-linkedin"></i></a>
+                </div>
+                <h4>Anoushka Mandal</h4>
+                <span>CSE-CORE,SRMIST</span>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-xl-4 col-md-6 d-flex" data-aos="zoom-in" data-aos-delay="600">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
+              </div>
+              <div class="member-info">
+                <div class="social">
+                  <a target="_blank" href="https://github.com/srijit369"><i class="bi bi-github"></i></a>
+                  <a target="_blank" href="mailto:srijit.dey55@gmail.com"><i class="bi bi-google"></i></a><!-- TEam DETAOLS-->
+                  <a target="_blank" href="https://www.linkedin.com/in/srijit108/"><i class="bi bi-linkedin"></i></a>
+                </div>
+                <h4>Srijit Kumar Dey</h4>
+                <span>CSE-CORE,SRMIST</span>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Team Section -->
+
+    <!-- Faq Section -->
+    <section id="faq" class="faq section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Frequently Asked Questions</h2>
+        <p>Have more questions? Feel free to reach out to our support team.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row faq-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5 d-flex">
+            <i class="bi bi-question-circle"></i>
+            <h4>Who was the first human in space?</h4>
+          </div>
+          <div class="col-lg-7">
+            <p>
+              Yuri Gagarin, a Soviet cosmonaut, became the first human in space on April 12, 1961, orbiting Earth in Vostok 1.
+            </p>
+          </div>
+        </div><!-- End F.A.Q Item-->
+
+        <div class="row faq-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-5 d-flex">
+            <i class="bi bi-question-circle"></i>
+            <h4>What was the first artificial satellite?</h4>
+          </div>
+          <div class="col-lg-7">
+            <p>
+              Sputnik 1, launched by the Soviet Union on October 4, 1957, was the first artificial satellite to orbit Earth.
+            </p>
+          </div>
+        </div><!-- End F.A.Q Item-->
+
+        <div class="row faq-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="col-lg-5 d-flex">
+            <i class="bi bi-question-circle"></i>
+            <h4>How does a rocket blast off?</h4>
+          </div>
+          <div class="col-lg-7">
+            <p>
+              Rockets burn fuel to produce hot, expanding gas that is expelled through a nozzle, generating thrust to lift off from Earth.
+            </p>
+          </div>
+        </div><!-- End F.A.Q Item-->
+
+        <div class="row faq-item" data-aos="fade-up" data-aos-delay="400">
+          <div class="col-lg-5 d-flex">
+            <i class="bi bi-question-circle"></i>
+            <h4>What do astronauts wear in space?</h4>
+          </div>
+          <div class="col-lg-7">
+            <p>
+              Astronauts wear specially designed spacesuits that provide life support, protection from radiation, and mobility in the harsh space environment.
+            </p>
+          </div>
+        </div><!-- End F.A.Q Item-->
+
+        <div class="row faq-item" data-aos="fade-up" data-aos-delay="500">
+          <div class="col-lg-5 d-flex">
+            <i class="bi bi-question-circle"></i>
+            <h4>What is a space probe?</h4>
+          </div>
+          <div class="col-lg-7">
+            <p>
+              A space probe is an uncrewed spacecraft sent to explore outer space, gathering data about planets, moons, and other celestial bodies.
+            </p>
+          </div>
+        </div><!-- End F.A.Q Item-->
+
+      </div>
+
+    </section><!-- /Faq Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Contact</h2>
+        <p>Have a question or want to learn more? Reach out and we’ll get back to you soon!</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-5">
+
+            <div class="info-wrap">
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+                <i class="bi bi-geo-alt flex-shrink-0"></i>
+                <div>
+                  <h3>Address</h3>
+                  <p>SRMIST, KTR,</p>
+                  <p>Chennai,</p>
+                  <p>Tamil Nadu-603203</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+                <i class="bi bi-telephone flex-shrink-0"></i>
+                <div>
+                  <h3>Call Us</h3>
+                  <p>+91 6296067763</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+                <i class="bi bi-envelope flex-shrink-0"></i>
+                <div>
+                  <h3>Email Us</h3>
+                  <p>srijit.dey55@gmail.com</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3896.982834633699!2d80.04576407505964!3d12.823874087464907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52f76d4cecae21%3A0x4ffbf1222ec00611!2sS.R.M%20UNIVERSITY%20-%20K.T.R%20Campus!5e0!3m2!1sen!2sin!4v1720084813433!5m2!1sen!2sin"
+                width="100%"
+                height="270"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <label for="name-field" class="pb-2">Your Name</label>
+                  <input type="text" name="name" id="name-field" class="form-control" required="">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="email-field" class="pb-2">Your Email</label>
+                  <input type="email" class="form-control" name="email" id="email-field" required="">
+                </div>
+
+                <div class="col-md-12">
+                  <label for="subject-field" class="pb-2">Subject</label>
+                  <input type="text" class="form-control" name="subject" id="subject-field" required="">
+                </div>
+
+                <div class="col-md-12">
+                  <label for="message-field" class="pb-2">Message</label>
+                  <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+
+                  <button type="submit">Send Message</button>
+                </div>
+
+              </div>
+            </form>
+          </div><!-- End Contact Form -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">Space Explorer</span>
+          </a><!--  END PART-->
+          <div class="footer-contact pt-3">
+            <p>SRMIST, KTR</p>
+            <p>Chennai, Tamil Nadu-603203</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+91 6296067763</span></p>
+            <p><strong>Email:</strong> <span>srijit.dey55@gmail.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href="https://github.com/srijit369"><i class="bi bi-github"></i></a>
+            <a href="https://www.linkedin.com/in/srijit108/"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Video Editing</a></li>
+            <li><a href="#">IoT Project Build</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Our Newsletter</h4>
+          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+          <form action="forms/newsletter.php" method="post" class="php-email-form">
+            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Space Explorer</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        Designed by <a href="">Team Christos</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!--Calender Js-->
+  <script src="script3.js"></script>
+
+  <script>
+  const world = Globe()
+    (document.getElementById('globeViz'))
+    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+    .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png');
+
+  // Optional: auto-rotate the globe
+  world.controls().autoRotate = true;
+  world.controls().autoRotateSpeed = 0.3;
+  </script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

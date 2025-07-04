@@ -1,0 +1,401 @@
+/* ---- Global Styles ---- */
+.Header {
+  text-align: center;
+  padding: 2rem 0 1.5rem 0;
+  background: linear-gradient(90deg, #0d1b2a 0%, #233554 100%);
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.5);
+  color: #fff;
+}
+
+.Header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 10px #4fc3f7, 0 0 15px #7c4dff;
+  margin: 0 0 0.5rem 0;
+  font-weight: 800;
+}
+
+.time-format, .date-format {
+  color: #b0b8c9;
+  font-size: 1.1rem;
+}
+
+:root {
+  --bg-main: #101d2c;
+  --bg-secondary: #1a2940;
+  --accent: #4fc3f7;
+  --accent2: #ddd9ea;
+  --calendar-bg: #18263c;
+  --calendar-active: #293a53;
+  --text-main: #e0eafc;
+  --text-secondary: #b0b8c9;
+  --sun-glow: #ffe082;
+  --shadow: 0 2px 16px 0 rgba(0,0,0,0.5);
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: radial-gradient(ellipse at 60% 20%, #18263c 0%, #101d2c 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.planet {
+  will-change: transform;
+}
+
+
+/* ---- Header ---- */
+header {
+  background: linear-gradient(90deg, #0d1b2a 0%, #233554 100%);
+  padding: 2rem 0 1.5rem 0;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-shadow: 0 0 10px #0f1010, 0 0 15px #3c0dbe;
+  margin: 0 0 0.5rem 0;
+  font-weight: 800;
+}
+
+.time-format, .date-format {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* ---- Main Layout ---- */
+main {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+/* ---- Calendar Container ---- */
+.calendar-container {
+  background: var(--calendar-bg);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  padding: 2rem 2rem 1rem 2rem;
+  min-width: 420px;
+  max-width: 520px;
+  flex: 1 1 420px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  animation: fadeInUp 1s;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* ---- Calendar Header ---- */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  gap: 1rem;
+}
+
+.year-controls, .month-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.year-controls span, .month-controls span {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+button {
+  background: var(--bg-secondary);
+  color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px 0 rgba(76,195,247,0.12);
+  transition: background 0.2s, transform 0.2s;
+}
+
+button:hover, button:focus {
+  background: var(--accent2);
+  color: #0a0a0a;
+  transform: scale(1.1);
+  outline: none;
+}
+
+/* ---- Weekdays ---- */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 0.5rem;
+  color: var(--accent2);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---- Calendar Days ---- */
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
+  margin-bottom: 1rem;
+}
+
+.calendar-days div {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 0.8rem 0 0.7rem 0;
+  margin: 2px 0;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(124,77,255,0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.calendar-days div:hover {
+  background: var(--accent2);
+  color: #c31616;
+  box-shadow: 0 0 8px #3c0eba;
+  transform: scale(1.08);
+}
+
+.calendar-days .active, .calendar-days .today {
+  background: var(--accent);
+  color: #222;
+  font-weight: bold;
+  box-shadow: 0 0 12px #4fc3f7;
+}
+
+.calendar-days .event {
+  border-bottom: 3px solid var(--accent2);
+}
+
+/* ---- Date Details ---- */
+.date-details {
+  margin: 1rem 0 0.5rem 0;
+  padding: 1rem 1.2rem;
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  color: var(--text-main);
+  font-size: 1.1rem;
+  min-height: 2.5rem;
+  box-shadow: 0 1px 6px 0 rgba(76,195,247,0.08);
+  transition: background 0.3s;
+  animation: fadeInUp 0.8s;
+}
+
+/* ---- Solar System Animation ---- */
+.solar-system {
+  position: relative;
+  height: 200px;
+  margin-top: 2rem;
+  background: #121724;
+}
+.sun {
+  position: absolute;
+  left: 50%;
+  top: 80px;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: gold;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 5px gold;
+}
+.planet {
+  position: absolute;
+  top: 90px;
+  border-radius: 50%;
+  animation: orbit 10s linear infinite;
+}
+.planet {
+  position: absolute;
+  top: 90px;
+  border-radius: 50%;
+  animation: orbit 10s linear infinite;
+  box-shadow: 0 0 8px 2px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.mercury {
+  width: 6px; height: 6px; left: 50%; margin-left: -3px; animation-duration: 3s;
+  background: radial-gradient(circle at 30% 30%, #f5f5f5 0%, #bbb 60%, #888 100%);
+}
+.venus {
+  width: 8px; height: 8px; left: 50%; margin-left: -4px; animation-duration: 5s;
+  background: radial-gradient(circle at 70% 30%, #ffe082 0%, #fbc02d 60%, orange 100%);
+}
+.earth {
+  width: 10px; height: 10px; left: 50%; margin-left: -5px; animation-duration: 8s;
+  background: radial-gradient(circle at 40% 60%, #b3e5fc 0%, #2196f3 60%, #0d47a1 100%);
+  box-shadow: 0 0 5px 1px #2196f3;
+}
+.mars {
+  width: 8px; height: 8px; left: 50%; margin-left: -4px; animation-duration: 11s;
+  background: radial-gradient(circle at 60% 40%, #ffccbc 0%, #e57373 60%, #b71c1c 100%);
+}
+.jupiter {
+  width: 12px; height: 12px; left: 50%; margin-left: -6px; animation-duration: 15s;
+  background: repeating-linear-gradient(120deg, #fffde7 0 2px, #ffe082 2px 4px, #bcaaa4 4px 6px, #fffde7 6px 8px);
+}
+.saturn {
+  width: 12px; height: 12px; left: 50%; margin-left: -6px; animation-duration: 18s;
+  background: repeating-linear-gradient(100deg, #fff9c4 0 2px, #ffe082 2px 4px, #bcaaa4 4px 6px, #fff9c4 6px 8px);
+  box-shadow: 0 0 8px 2px #ffe082;
+}
+.uranus {
+  width: 10px; height: 10px; left: 50%; margin-left: -5px; animation-duration: 22s;
+  background: radial-gradient(circle at 60% 40%, #e0f7fa 0%, #26c6da 60%, #006064 100%);
+}
+.neptune {
+  width: 10px; height: 10px; left: 50%; margin-left: -5px; animation-duration: 25s;
+  background: radial-gradient(circle at 40% 60%, #b3c6ff 0%, #3f51b5 60%, #1a237e 100%);
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+@media (max-width: 768px) {
+  main { flex-direction: column; }
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+  background: var(--calendar-bg);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  padding: 2rem 1.5rem;
+  min-width: 320px;
+  max-width: 360px;
+  flex: 1 1 320px;
+  margin-top: 0.5rem;
+  animation: fadeInUp 1.2s;
+}
+
+.sidebar h2 {
+  color: var(--accent2);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px #7c4dff;
+}
+
+#event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2rem 0;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+#event-list li {
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.8rem;
+  font-size: 1.05rem;
+  box-shadow: 0 1px 6px 0 rgba(76,195,247,0.07);
+  transition: background 0.2s, color 0.2s;
+}
+
+#event-list li:hover {
+  background: var(--accent2);
+  color: #fff;
+  cursor: pointer;
+}
+
+.add-event {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.add-event input[type="date"],
+.add-event input[type="text"] {
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  border: 1px solid var(--accent2);
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.add-event input:focus {
+  border: 1.5px solid var(--accent);
+}
+
+.add-event button {
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  margin-left: 0.1rem;
+}
+
+.api-section {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: 0.9rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 0.7rem 1rem;
+  min-height: 40px;
+  box-shadow: 0 1px 6px 0 rgba(76,195,247,0.07);
+  font-size: 1rem;
+  animation: fadeInUp 1.5s;
+}
+
+/* ---- Scrollbar Styling ---- */
+::-webkit-scrollbar {
+  width: 9px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent2);
+  border-radius: 8px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1100px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  .calendar-container, .sidebar {
+    min-width: 300px;
+    max-width: 96vw;
+  }
+  .solar-system {
+    width: 260px;
+    height: 260px;
+  }
+}
